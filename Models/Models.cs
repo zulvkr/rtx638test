@@ -17,7 +17,7 @@ public class Appointment
     public int Id { get; set; }
     public DateTime Date { get; set; }
     public required Guid Token { get; set; }
-    public required Customer Customer { get; set; }
+    public Customer? Customer { get; set; }
     public int CustomerId { get; set; }
     public string? Location { get; set; }
     public string? Notes { get; set; }
