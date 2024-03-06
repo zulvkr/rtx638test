@@ -9,8 +9,9 @@ public class TheAgencyDbContext : DbContext
     public TheAgencyDbContext(DbContextOptions<TheAgencyDbContext> options)
         : base(options)
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
+        // var folder = Environment.SpecialFolder.LocalApplicationData;
+        // var path = Environment.GetFolderPath(folder);
+        var path = System.IO.Directory.GetCurrentDirectory();
         DbPath = System.IO.Path.Join(path, "agency.db");
     }
 
