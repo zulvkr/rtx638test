@@ -4,17 +4,12 @@ using TheAgencyApi.Models;
 
 namespace TheAgencyApi.DAL;
 
-public interface IDateConfigurationRepository
+public interface IDateConfigurationRepository : IBaseRepositoryWrite<DateConfiguration>
 {
     Task<DefaultDateConfiguration> GetDefault();
     Task<DateConfiguration?> GetByDate(DateTime date);
     Task<List<DateConfiguration>> GetAll();
     Task<List<DateConfiguration>> GetByPeriod(DateTime startDate, DateTime endDate);
-    void Create(DateConfiguration dateConfiguration);
-    void Update(DateConfiguration dateConfiguration);
-    void Delete(DateConfiguration dateConfiguration);
-    Task Save();
-
 }
 
 public class DateConfigurationRepository : IDateConfigurationRepository
@@ -52,14 +47,16 @@ public class DateConfigurationRepository : IDateConfigurationRepository
         return await query.ToListAsync();
     }
 
-    public void Create(DateConfiguration dateConfiguration)
+    public DateConfiguration Create(DateConfiguration dateConfiguration)
     {
         _context.DateConfiguration.Add(dateConfiguration);
+        return dateConfiguration;
     }
 
-    public void Update(DateConfiguration dateConfiguration)
+    public DateConfiguration Update(DateConfiguration dateConfiguration)
     {
         _context.Entry(dateConfiguration).State = EntityState.Modified;
+        return dateConfiguration;
     }
 
     public void Delete(DateConfiguration dateConfiguration)

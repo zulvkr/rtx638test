@@ -58,8 +58,8 @@ namespace TheAgencyApi.Controllers
         [HttpPost]
         public async Task<ActionResult<DateConfigurationDTO>> PostDateConfiguration(DateConfigurationDTO dateConfiguration)
         {
-            await _dcService.Create(dateConfiguration);
-            return CreatedAtAction("GetDateConfiguration", new { date = dateConfiguration.Date }, dateConfiguration);
+            var created = await _dcService.Create(dateConfiguration);
+            return CreatedAtAction("GetDateConfiguration", new { date = dateConfiguration.Date }, created);
         }
 
         [HttpDelete("{date}")]

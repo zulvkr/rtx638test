@@ -67,8 +67,8 @@ namespace TheAgencyApi.Controllers
         [HttpPost]
         public async Task<ActionResult<AppointmentDTO>> PostAppointment(AppointmentDTO appointment)
         {
-            await _appointmentService.Create(appointment);
-            return CreatedAtAction("GetAppointment", new { id = appointment.Id }, appointment);
+            var created = await _appointmentService.Create(appointment);
+            return CreatedAtAction("GetAppointment", new { id = created.Id }, created);
         }
 
         [HttpDelete("{id}")]

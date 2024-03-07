@@ -5,15 +5,13 @@ using TheAgencyApi.Models;
 
 namespace TheAgencyApi.Services;
 
-public interface IDateConfigurationService
+public interface IDateConfigurationService : IBaseServiceWrite<DateConfigurationDTO, DateTime>
 {
     Task<DateConfigurationDTO> GetByDate(DateTime date);
     Task<List<DateConfigurationDTO>> GetByPeriod(DateTime startDate, DateTime endDate);
     Task<List<DateConfigurationDTO>> GetAllConfiguredDates();
-    Task Update(DateConfigurationDTO dateConfiguration);
-    Task Create(DateConfigurationDTO dateConfiguration);
-    Task Delete(DateTime date);
 }
+
 public class DateConfigurationService : IDateConfigurationService
 {
     private readonly IDateConfigurationRepository _dcRepository;
@@ -92,9 +90,9 @@ public class DateConfigurationService : IDateConfigurationService
         };
     }
 
-    public async Task Update(DateConfigurationDTO dateConfiguration)
+    public async Task<DateConfigurationDTO> Update(DateConfigurationDTO dateConfiguration)
     {
-        _dcRepository.Update(new DateConfiguration
+        var updated = _dcRepository.Update(new DateConfiguration
         {
             Date = dateConfiguration.Date,
             MaxAppointments = dateConfiguration.MaxAppointments,
@@ -104,7 +102,7 @@ public class DateConfigurationService : IDateConfigurationService
         try
         {
             await _dcRepository.Save();
-
+            return MapToDTO(updated);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -116,9 +114,9 @@ public class DateConfigurationService : IDateConfigurationService
         }
     }
 
-    public async Task Create(DateConfigurationDTO dateConfiguration)
+    public async Task<DateConfigurationDTO> Create(DateConfigurationDTO dateConfiguration)
     {
-        _dcRepository.Create(new DateConfiguration
+        var created = _dcRepository.Create(new DateConfiguration
         {
             Date = dateConfiguration.Date,
             MaxAppointments = dateConfiguration.MaxAppointments,
@@ -126,6 +124,7 @@ public class DateConfigurationService : IDateConfigurationService
         });
 
         await _dcRepository.Save();
+        return MapToDTO(created);
     }
 
     public async Task Delete(DateTime date)
@@ -140,6 +139,16 @@ public class DateConfigurationService : IDateConfigurationService
         {
             throw new ArgumentException("Date configuration not found");
         }
+    }
+
+    private DateConfigurationDTO MapToDTO(DateConfiguration dateConfiguration)
+    {
+        return new DateConfigurationDTO
+        {
+            Date = dateConfiguration.Date,
+            MaxAppointments = dateConfiguration.MaxAppointments,
+            IsOffDay = dateConfiguration.IsOffDay
+        };
     }
 
 }

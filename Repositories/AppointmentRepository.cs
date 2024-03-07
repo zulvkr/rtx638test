@@ -4,17 +4,14 @@ using TheAgencyApi.Models;
 
 namespace TheAgencyApi.DAL;
 
-public interface IAppointmentRepository
+public interface IAppointmentRepository : IBaseRepositoryWrite<Appointment>
 {
     Task<List<Appointment>> GetAll();
     Task<List<Appointment>> GetByPeriod(DateTime startDate, DateTime endDate);
     Task<List<Appointment>> GetByDate(DateTime date);
     Task<Appointment?> GetById(int id);
     Task<Appointment?> GetByToken(Guid token);
-    void Create(Appointment appointment);
-    void Update(Appointment appointment);
-    void Delete(Appointment appointment);
-    Task Save();
+
 }
 
 public class AppointmentRepository : IAppointmentRepository
@@ -61,14 +58,16 @@ public class AppointmentRepository : IAppointmentRepository
         return await _context.Appointment.FirstOrDefaultAsync(x => x.Token == token);
     }
 
-    public void Create(Appointment appointment)
+    public Appointment Create(Appointment appointment)
     {
         _context.Appointment.Add(appointment);
+        return appointment;
     }
 
-    public void Update(Appointment appointment)
+    public Appointment Update(Appointment appointment)
     {
         _context.Entry(appointment).State = EntityState.Modified;
+        return appointment;
     }
 
     public void Delete(Appointment appointment)

@@ -4,16 +4,13 @@ using TheAgencyApi.Models;
 
 namespace TheAgencyApi.Services;
 
-public interface IAppointmentService
+public interface IAppointmentService : IBaseServiceWrite<AppointmentDTO, int>
 {
     Task<List<AppointmentDTO>> GetAll();
     Task<List<AppointmentDTO>> GetByPeriod(DateTime startDate, DateTime endDate);
     Task<List<AppointmentDTO>> GetByDate(DateTime date);
     Task<AppointmentDTO?> GetById(int id);
     Task<AppointmentDTO?> GetByToken(Guid token);
-    Task Create(AppointmentDTO appointment);
-    Task Update(AppointmentDTO appointment);
-    Task Delete(int id);
 }
 
 public class AppointmentService : IAppointmentService
@@ -55,19 +52,20 @@ public class AppointmentService : IAppointmentService
         return appointment == null ? null : MapToDTO(appointment);
     }
 
-    public async Task Create(AppointmentDTO appointment)
+    public async Task<AppointmentDTO> Create(AppointmentDTO appointment)
     {
         // TODO: Validate day is not off and other criteria
-        _appointmentRepository.Create(new Appointment
+        var created = _appointmentRepository.Create(new Appointment
         {
             CustomerId = appointment.CustomerId,
             Date = appointment.Date,
             Token = Guid.NewGuid()
         });
         await _appointmentRepository.Save();
+        return MapToDTO(created);
     }
 
-    public async Task Update(AppointmentDTO appointment)
+    public Task<AppointmentDTO> Update(AppointmentDTO appointment)
     {
         throw new NotImplementedException();
     }
