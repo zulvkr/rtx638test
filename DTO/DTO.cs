@@ -14,3 +14,14 @@ public class DateConfigurationDTO
         }
     }
 }
+
+public class AppointmentDTO
+{
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+    public Guid Token { get; set; }
+    public int CustomerId { get; set; }
+    public string? CustomerName { get; set; }
+    public string? Location { get; set; }
+    public string? Notes { get; set; }
+}

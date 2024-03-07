@@ -43,8 +43,8 @@ public class TheAgencyDbContext : DbContext
         );
 
         modelBuilder.Entity<Appointment>().HasData(
-            new Appointment { Id = 1, CustomerId = 1, Date = new DateTime(2021, 1, 1), Token = new Guid() },
-            new Appointment { Id = 2, CustomerId = 2, Date = new DateTime(2021, 1, 2), Token = new Guid() }
+            new Appointment { Id = 1, CustomerId = 1, Date = new DateTime(2021, 1, 1), Token = Guid.NewGuid() },
+            new Appointment { Id = 2, CustomerId = 2, Date = new DateTime(2021, 1, 2), Token = Guid.NewGuid() }
         );
 
     }

@@ -11,6 +11,8 @@ builder.Services.AddDbContext<TheAgencyDbContext>();
 
 builder.Services.AddScoped<IDateConfigurationRepository, DateConfigurationRepository>();
 builder.Services.AddScoped<IDateConfigurationService, DateConfigurationService>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
