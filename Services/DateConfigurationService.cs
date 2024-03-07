@@ -85,7 +85,19 @@ public class DateConfigurationService : IDateConfigurationService
             IsOffDay = dateConfiguration.IsOffDay
         });
 
-        await _dcRepository.Save();
+        try
+        {
+            await _dcRepository.Save();
+
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (await _dcRepository.GetByDate(dateConfiguration.Date) == null)
+            {
+                throw new ArgumentException("Date configuration not found");
+            }
+            throw;
+        }
     }
 
     public async Task Create(DateConfigurationDTO dateConfiguration)
@@ -106,8 +118,12 @@ public class DateConfigurationService : IDateConfigurationService
         if (dateConfiguration != null)
         {
             _dcRepository.Delete(dateConfiguration);
+            await _dcRepository.Save();
         }
-        await _dcRepository.Save();
+        else
+        {
+            throw new ArgumentException("Date configuration not found");
+        }
     }
 
 }

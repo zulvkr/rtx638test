@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TheAgencyApi.DTO;
 using TheAgencyApi.Services;
 
@@ -35,27 +34,15 @@ namespace TheAgencyApi.Controllers
         }
 
         [HttpPut("{date}")]
-        public async Task<IActionResult> PutDateConfiguration(DateTime date, DateConfigurationDTO dateConfiguration)
+        public async Task<IActionResult> PutDateConfiguration(DateConfigurationDTO dateConfiguration)
         {
-            if (date != dateConfiguration.Date)
-            {
-                return BadRequest();
-            }
-
             try
             {
                 await _dcService.Update(dateConfiguration);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ArgumentException)
             {
-                if (await _dcService.GetByDate(date) == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -65,20 +52,20 @@ namespace TheAgencyApi.Controllers
         public async Task<ActionResult<DateConfigurationDTO>> PostDateConfiguration(DateConfigurationDTO dateConfiguration)
         {
             await _dcService.Create(dateConfiguration);
-
             return CreatedAtAction("GetDateConfiguration", new { date = dateConfiguration.Date }, dateConfiguration);
         }
 
         [HttpDelete("{date}")]
         public async Task<IActionResult> DeleteDateConfiguration(DateTime date)
         {
-            var dateConfiguration = await _dcService.GetByDate(date);
-            if (dateConfiguration == null)
+            try
+            {
+                await _dcService.Delete(date);
+            }
+            catch (ArgumentException)
             {
                 return NotFound();
             }
-
-            await _dcService.Delete(date);
 
             return NoContent();
         }
