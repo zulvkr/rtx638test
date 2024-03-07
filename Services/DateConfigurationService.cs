@@ -61,6 +61,7 @@ public class DateConfigurationService : IDateConfigurationService
             return new DateConfigurationDTO
             {
                 Date = date,
+                // TODO: This should be the number of appointments for the day
                 AppointmentCount = 0,
                 MaxAppointments = defaultDateConfiguration.MaxAppointments,
                 IsOffDay = isRecurrentHoliday
@@ -70,6 +71,7 @@ public class DateConfigurationService : IDateConfigurationService
         return new DateConfigurationDTO
         {
             Date = dateConfiguration.Date,
+            // TODO: This should be the number of appointments for the day
             AppointmentCount = 0,
             MaxAppointments = dateConfiguration.MaxAppointments ?? defaultDateConfiguration.MaxAppointments,
             IsOffDay = dateConfiguration.IsOffDay || isRecurrentHoliday
