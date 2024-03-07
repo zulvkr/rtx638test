@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheAgencyApi.Models;
 
@@ -12,6 +13,7 @@ public class Customer
     public List<Appointment> Appointments { get; set; } = [];
 }
 
+[Index(nameof(Token), IsUnique = true)]
 public class Appointment
 {
     public int Id { get; set; }
