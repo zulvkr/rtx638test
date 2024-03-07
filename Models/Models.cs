@@ -39,43 +39,15 @@ public class DateConfiguration
 public class DefaultDateConfiguration
 {
     public int Id { get; set; }
-    public string? WeeklyHolidayStrings { get; set; }
     public DayOfWeek[]? WeeklyHolidays
     {
-        get
-        {
-            return WeeklyHolidayStrings?.Split(',').Select(x => Enum.Parse<DayOfWeek>(x)).ToArray();
-        }
-
-        set
-        {
-            if (value == null)
-            {
-                WeeklyHolidayStrings = null;
-                return;
-            }
-            WeeklyHolidayStrings = string.Join(',', value.Select(x => x.ToString()));
-        }
+        get;
+        set;
     }
-
-    public string? YearlyHolidayStrings { get; set; }
     public DateTime[]? YearlyHolidays
     {
-        get
-        {
-            return YearlyHolidayStrings?.Split(',').Select(x => DateTime.Parse(x)).ToArray();
-        }
-
-        set
-        {
-            if (value == null)
-            {
-                YearlyHolidayStrings = null;
-                return;
-            }
-            YearlyHolidayStrings = string.Join(',', value);
-        }
+        get;
+        set;
     }
-
     public int? MaxAppointments { get; set; }
 }

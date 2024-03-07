@@ -65,7 +65,7 @@ public class DateConfigurationService : IDateConfigurationService
         var isWeeklyHoliday = defaultDateConfiguration.WeeklyHolidays?
             .Contains(date.DayOfWeek) ?? false;
         var isYearlyHoliday = defaultDateConfiguration.YearlyHolidays?
-            .Contains(date) ?? false;
+            .Any(x => x.Month == date.Month && x.Day == date.Day) ?? false;
         var isRecurrentHoliday = isWeeklyHoliday || isYearlyHoliday;
 
         if (dateConfiguration == null)
@@ -86,7 +86,7 @@ public class DateConfigurationService : IDateConfigurationService
             // TODO: This should be the number of appointments for the day
             AppointmentCount = 0,
             MaxAppointments = dateConfiguration.MaxAppointments ?? defaultDateConfiguration.MaxAppointments,
-            IsOffDay = dateConfiguration.IsOffDay || isRecurrentHoliday
+            IsOffDay = dateConfiguration.IsOffDay
         };
     }
 

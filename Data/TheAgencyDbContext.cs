@@ -39,7 +39,13 @@ public class TheAgencyDbContext : DbContext
         );
 
         modelBuilder.Entity<DefaultDateConfiguration>().HasData(
-            new DefaultDateConfiguration { Id = 1, WeeklyHolidays = [DayOfWeek.Saturday, DayOfWeek.Sunday] }
+            new DefaultDateConfiguration
+            {
+                Id = 1,
+                WeeklyHolidays = [DayOfWeek.Saturday, DayOfWeek.Sunday],
+                YearlyHolidays = [new DateTime(2021, 1, 1)],
+                MaxAppointments = 8
+            }
         );
 
         modelBuilder.Entity<Appointment>().HasData(

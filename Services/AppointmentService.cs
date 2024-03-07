@@ -55,6 +55,12 @@ public class AppointmentService : IAppointmentService
     public async Task<AppointmentDTO> Create(AppointmentDTO appointment)
     {
         // TODO: Validate day is not off and other criteria
+        // Validation Rules:
+        // 1. Day is not off
+        // 2. Day is not full
+
+        // 3. If full, check next non off day
+        // 4. If next non off day is full, throw exception
         var created = _appointmentRepository.Create(new Appointment
         {
             CustomerId = appointment.CustomerId,
@@ -87,7 +93,7 @@ public class AppointmentService : IAppointmentService
         {
             Id = appointment.Id,
             CustomerId = appointment.CustomerId,
-            CustomerName = appointment.Customer?.FullName ?? "",
+            CustomerName = appointment.Customer?.FullName,
             Date = appointment.Date,
             Token = appointment.Token
         };
