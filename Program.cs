@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using TheAgencyApi.Models;
+using TheAgencyApi.DAL;
+using TheAgencyApi.Data;
+using TheAgencyApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TheAgencyDbContext>();
+
+builder.Services.AddScoped<IDateConfigurationRepository, DateConfigurationRepository>();
+builder.Services.AddScoped<IDateConfigurationService, DateConfigurationService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
