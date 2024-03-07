@@ -22,9 +22,16 @@ namespace TheAgencyApi.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DateConfigurationDTO>>> GetDateConfiguration(
-            [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+            [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
         {
-            return await _dcService.GetByPeriod(startDate, endDate);
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                return await _dcService.GetByPeriod(startDate.Value, endDate.Value);
+            }
+            else
+            {
+                return await _dcService.GetAllConfiguredDates();
+            }
         }
 
         [HttpGet("{date}")]

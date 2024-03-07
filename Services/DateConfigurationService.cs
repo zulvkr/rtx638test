@@ -9,6 +9,7 @@ public interface IDateConfigurationService
 {
     Task<DateConfigurationDTO> GetByDate(DateTime date);
     Task<List<DateConfigurationDTO>> GetByPeriod(DateTime startDate, DateTime endDate);
+    Task<List<DateConfigurationDTO>> GetAllConfiguredDates();
     Task Update(DateConfigurationDTO dateConfiguration);
     Task Create(DateConfigurationDTO dateConfiguration);
     Task Delete(DateTime date);
@@ -46,6 +47,19 @@ public class DateConfigurationService : IDateConfigurationService
         }
 
         return dateConfigurations;
+    }
+
+    public async Task<List<DateConfigurationDTO>> GetAllConfiguredDates()
+    {
+        var configuredDates = await _dcRepository.GetAll();
+        return configuredDates.Select(x => new DateConfigurationDTO
+        {
+            Date = x.Date,
+            // TODO: This should be the number of appointments for the day
+            AppointmentCount = 0,
+            MaxAppointments = x.MaxAppointments,
+            IsOffDay = x.IsOffDay
+        }).ToList();
     }
 
     private static DateConfigurationDTO InternalGetDateConfiguration(DateTime date, DefaultDateConfiguration defaultDateConfiguration, DateConfiguration? dateConfiguration)
