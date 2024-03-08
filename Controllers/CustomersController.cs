@@ -10,7 +10,7 @@ using TheAgencyApi.Models;
 
 namespace TheAgencyApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {

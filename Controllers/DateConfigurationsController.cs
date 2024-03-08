@@ -9,7 +9,7 @@ using TheAgencyApi.Services;
 
 namespace TheAgencyApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DateConfigurationsController : ControllerBase
     {
