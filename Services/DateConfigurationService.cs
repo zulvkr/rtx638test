@@ -32,8 +32,15 @@ public class DateConfigurationService : IDateConfigurationService
 
         var dateConfiguration = await _dcRepository.GetByDate(date);
 
-        return await InternalGetDateConfiguration(date, defaultDateConfiguration,
-            dateConfiguration, dateConfiguration?.AppointmentCount ?? 0);
+        if (dateConfiguration == null)
+        {
+            var appointmentCount = await _appointmentRepository.CountByDate(date);
+            return InternalGetDateConfiguration(date, defaultDateConfiguration,
+                dateConfiguration, appointmentCount);
+        }
+
+        return InternalGetDateConfiguration(date, defaultDateConfiguration,
+            dateConfiguration, dateConfiguration.AppointmentCount);
     }
 
     public async Task<List<DateConfigurationDTO>> GetByPeriod(DateTime startDate, DateTime endDate)
@@ -48,8 +55,7 @@ public class DateConfigurationService : IDateConfigurationService
             var dateConfiguration = configuredDates.FirstOrDefault(x => x.Date == date);
             var appointmentCount = appointmentCounts.FirstOrDefault(x => x.Date == date)?.Count ?? 0;
             result.Add(
-                // TODO: this will call appointment count the database for each unconfigured date
-                await InternalGetDateConfiguration(date, defaultDateConfiguration,
+                InternalGetDateConfiguration(date, defaultDateConfiguration,
                     dateConfiguration, appointmentCount)
             );
         }
@@ -120,7 +126,7 @@ public class DateConfigurationService : IDateConfigurationService
         }
     }
 
-    private async Task<DateConfigurationDTO> InternalGetDateConfiguration(
+    private static DateConfigurationDTO InternalGetDateConfiguration(
         DateTime date,
         DefaultDateConfiguration defaultDateConfiguration,
         DateConfiguration? dateConfiguration,
