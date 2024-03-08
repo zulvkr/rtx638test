@@ -7,8 +7,8 @@ namespace TheAgencyApi.DAL;
 public interface IDateConfigurationRepository : IBaseRepositoryWrite<DateConfiguration>
 {
     Task<DefaultDateConfiguration> GetDefault();
-    Task<DateConfiguration?> GetByDate(DateTime date);
-    Task<List<DateConfiguration>> GetAll();
+    Task<DateConfigurationWithAppointments?> GetByDate(DateTime date);
+    Task<List<DateConfigurationWithAppointments>> GetAll();
     Task<List<DateConfiguration>> GetByPeriod(DateTime startDate, DateTime endDate);
 }
 
@@ -28,22 +28,43 @@ public class DateConfigurationRepository : IDateConfigurationRepository
             ?? throw new Exception("Default date configuration not found");
     }
 
-    public async Task<DateConfiguration?> GetByDate(DateTime date)
+    public async Task<DateConfigurationWithAppointments?> GetByDate(DateTime date)
     {
-        return await _context.DateConfiguration.FirstOrDefaultAsync(x => x.Date == date);
+        var query = from dc in _context.DateConfiguration
+                    where dc.Date == date
+                    join a in _context.Appointment on dc.Date equals a.Date into appointments
+                    select new DateConfigurationWithAppointments
+                    {
+                        Date = dc.Date,
+                        IsOffDay = dc.IsOffDay,
+                        MaxAppointments = dc.MaxAppointments,
+                        AppointmentCount = appointments.Count()
+                    };
+
+        return await query.FirstOrDefaultAsync();
     }
 
-    public async Task<List<DateConfiguration>> GetAll()
+    public async Task<List<DateConfigurationWithAppointments>> GetAll()
     {
-        return await _context.DateConfiguration.ToListAsync();
+        var query = from dc in _context.DateConfiguration
+                    join a in _context.Appointment on dc.Date equals a.Date into appointments
+                    select new DateConfigurationWithAppointments
+                    {
+                        Date = dc.Date,
+                        IsOffDay = dc.IsOffDay,
+                        MaxAppointments = dc.MaxAppointments,
+                        AppointmentCount = appointments.Count()
+                    };
+
+        return await query.ToListAsync();
     }
 
     public async Task<List<DateConfiguration>> GetByPeriod(DateTime startDate, DateTime endDate)
     {
-        var query = from dateConfiguration in _context.DateConfiguration
-                    where dateConfiguration.Date >= startDate && dateConfiguration.Date <= endDate
-                    select dateConfiguration;
 
+        var query = from dc in _context.DateConfiguration
+                    where dc.Date >= startDate && dc.Date <= endDate
+                    select dc;
         return await query.ToListAsync();
     }
 

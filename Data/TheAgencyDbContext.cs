@@ -34,8 +34,11 @@ public class TheAgencyDbContext : DbContext
         );
 
         modelBuilder.Entity<DateConfiguration>().HasData(
-            new DateConfiguration { Date = new DateTime(2021, 1, 1), IsOffDay = true, MaxAppointments = 8 },
-            new DateConfiguration { Date = new DateTime(2021, 1, 2), IsOffDay = false }
+            // Full day example (Friday)
+            new DateConfiguration { Date = new DateTime(2030, 1, 4), IsOffDay = false, MaxAppointments = 8 },
+
+            // Off day example (Monday)
+            new DateConfiguration { Date = new DateTime(2030, 1, 7), IsOffDay = true }
         );
 
         modelBuilder.Entity<DefaultDateConfiguration>().HasData(
@@ -43,14 +46,23 @@ public class TheAgencyDbContext : DbContext
             {
                 Id = 1,
                 WeeklyHolidays = [DayOfWeek.Saturday, DayOfWeek.Sunday],
-                YearlyHolidays = [new DateTime(2021, 1, 1)],
-                MaxAppointments = 8
+                YearlyHolidays = [new DateTime(2030, 1, 4)],
             }
         );
 
         modelBuilder.Entity<Appointment>().HasData(
-            new Appointment { Id = 1, CustomerId = 1, Date = new DateTime(2021, 1, 1), Token = Guid.NewGuid() },
-            new Appointment { Id = 2, CustomerId = 2, Date = new DateTime(2021, 1, 2), Token = Guid.NewGuid() }
+            // Full day example
+            new Appointment { Id = 1, CustomerId = 1, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 2, CustomerId = 2, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 3, CustomerId = 1, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 4, CustomerId = 2, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 5, CustomerId = 2, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 6, CustomerId = 1, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 7, CustomerId = 1, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+            new Appointment { Id = 8, CustomerId = 1, Date = new DateTime(2030, 1, 4), Token = Guid.NewGuid() },
+
+            // Regular day example
+            new Appointment { Id = 9, CustomerId = 1, Date = new DateTime(2030, 1, 8), Token = Guid.NewGuid() }
         );
 
     }

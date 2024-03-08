@@ -16,10 +16,12 @@ public interface IAppointmentService : IBaseServiceWrite<AppointmentDTO, int>
 public class AppointmentService : IAppointmentService
 {
     private readonly IAppointmentRepository _appointmentRepository;
+    private readonly IDateConfigurationService _dateConfigurationService;
 
-    public AppointmentService(IAppointmentRepository appointmentRepository)
+    public AppointmentService(IAppointmentRepository appointmentRepository, IDateConfigurationService dateConfigurationService)
     {
         _appointmentRepository = appointmentRepository;
+        _dateConfigurationService = dateConfigurationService;
     }
 
     public async Task<List<AppointmentDTO>> GetAll()
@@ -54,13 +56,33 @@ public class AppointmentService : IAppointmentService
 
     public async Task<AppointmentDTO> Create(AppointmentDTO appointment)
     {
-        // TODO: Validate day is not off and other criteria
         // Validation Rules:
         // 1. Day is not off
         // 2. Day is not full
-
         // 3. If full, check next non off day
         // 4. If next non off day is full, throw exception
+
+        var dateConfiguration = await _dateConfigurationService.GetByDate(appointment.Date);
+        if (dateConfiguration.IsOffDay)
+        {
+            throw new ArgumentException("Day is off");
+        }
+
+        if (dateConfiguration.IsFullDay)
+        {
+            DateConfigurationDTO nextNonOffDateConfiguration;
+            do
+            {
+                appointment.Date = appointment.Date.AddDays(1);
+                nextNonOffDateConfiguration = await _dateConfigurationService.GetByDate(appointment.Date);
+            } while (nextNonOffDateConfiguration.IsOffDay);
+
+            if (nextNonOffDateConfiguration.IsFullDay)
+            {
+                throw new ArgumentException($"Selected day and next day are full");
+            }
+        }
+
         var created = _appointmentRepository.Create(new Appointment
         {
             CustomerId = appointment.CustomerId,

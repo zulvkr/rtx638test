@@ -28,6 +28,12 @@ public class Appointment
     public string? Notes { get; set; }
 }
 
+public class AppointmentCount
+{
+    public DateTime Date { get; set; }
+    public int Count { get; set; }
+}
+
 public class DateConfiguration
 {
     [Key]
@@ -36,6 +42,12 @@ public class DateConfiguration
     public int? MaxAppointments { get; set; }
     public bool IsOffDay { get; set; }
 }
+
+public class DateConfigurationWithAppointments : DateConfiguration
+{
+    public int AppointmentCount { get; set; }
+}
+
 public class DefaultDateConfiguration
 {
     public int Id { get; set; }

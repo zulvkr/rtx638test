@@ -11,7 +11,8 @@ public interface IAppointmentRepository : IBaseRepositoryWrite<Appointment>
     Task<List<Appointment>> GetByDate(DateTime date);
     Task<Appointment?> GetById(int id);
     Task<Appointment?> GetByToken(Guid token);
-
+    Task<int> CountByDate(DateTime date);
+    Task<List<AppointmentCount>> CountByPeriod(DateTime startDate, DateTime endDate);
 }
 
 public class AppointmentRepository : IAppointmentRepository
@@ -56,6 +57,25 @@ public class AppointmentRepository : IAppointmentRepository
     public async Task<Appointment?> GetByToken(Guid token)
     {
         return await _context.Appointment.FirstOrDefaultAsync(x => x.Token == token);
+    }
+
+    public async Task<int> CountByDate(DateTime date)
+    {
+        return await _context.Appointment.CountAsync(x => x.Date == date);
+    }
+
+    public async Task<List<AppointmentCount>> CountByPeriod(DateTime startDate, DateTime endDate)
+    {
+        var query = from appointment in _context.Appointment
+                    where appointment.Date >= startDate && appointment.Date <= endDate
+                    group appointment by appointment.Date into g
+                    select new AppointmentCount
+                    {
+                        Date = g.Key,
+                        Count = g.Count()
+                    };
+
+        return await query.ToListAsync();
     }
 
     public Appointment Create(Appointment appointment)
