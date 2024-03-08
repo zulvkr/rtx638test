@@ -32,6 +32,7 @@ Manually, I have tested following scenarios:
 - Create a new appointment in empty days.
 - Create date configuration.
 - Edit date configuration.
+- Create a Customer.
 
 ## Getting Started
 
