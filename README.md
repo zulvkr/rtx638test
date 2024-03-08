@@ -25,6 +25,14 @@ We utilize Sqlite for our database needs. The project uses a code-first approach
 
 TheAgencyApi utilizes xUnit as the testing framework for integration tests.The test coverage is still limited.
 
+Manually, I have tested following scenarios:
+
+- Create a new appointment in off days.
+- Create a new appointment in full appointment days.
+- Create a new appointment in empty days.
+- Create date configuration.
+- Edit date configuration.
+
 ## Getting Started
 
 Open the solution and run the project via dotnet cli or visual studio.
